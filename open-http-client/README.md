@@ -17,7 +17,7 @@ Both the above experience led to the problem definition - "Using various HTTP Cl
 With the limited knowledge of the design patterns and industry experience, this is a small and humble effort in solving the above stated problem.
 
 ## Class Diagram
-<img src="file:./uml/class-diagram.png"></img>
+![Class Diagram](uml/class-diagram.png)
 
 ## Design Patterns Used:
 <ul><li>Adapter</li>
