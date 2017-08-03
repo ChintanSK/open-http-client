@@ -1,11 +1,11 @@
-package com.ma.open.http.client.request.sender.impl;
+package com.ma.open.http.client.external.request.sender.impl;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.HttpResponse;
 import com.ma.open.http.client.request.SSLConfig;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
-public class JerseyHttpRequestSender implements IHttpRequestSender {
+public class ApacheHttpRequestSender implements IHttpRequestSender {
 
 	@Override
 	public void configureSsl(SSLConfig sslConfig) {

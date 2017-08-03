@@ -1,19 +1,15 @@
 package com.ma.open.http.client.external.service;
 
-import static com.ma.open.http.client.request.AbstractHttpRequestBuilder.aGetRequest;
-import static com.ma.open.http.client.request.AbstractHttpRequestBuilder.aPostRequest;
+import static com.ma.open.http.client.request.OpenHttpClient.newGetRequest;
+import static com.ma.open.http.client.request.OpenHttpClient.newPostRequest;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.SSLConfig;
-import com.ma.open.http.client.request.invoker.AsyncRequestInvoker;
-import com.ma.open.http.client.request.invoker.SyncRequestInvoker;
-import com.ma.open.http.client.request.sender.impl.ApacheHttpRequestSender;
-import com.ma.open.http.client.request.sender.impl.JerseyHttpRequestSender;
+import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 
@@ -27,38 +23,31 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 		}
 	};
 
-	private SyncRequestInvoker syncInvoker;
-	private AsyncRequestInvoker asyncInvoker;
+	private IHttpRequestSender httpRequestSender;
 
-	public RemoteServiceAdapter(SyncRequestInvoker syncInvoker, AsyncRequestInvoker asyncInvoker) {
-		this.syncInvoker = syncInvoker;
-		this.asyncInvoker = asyncInvoker;
+	public RemoteServiceAdapter(IHttpRequestSender httpRequestSender) {
+		this.httpRequestSender = httpRequestSender;
 	}
 
 	@Override
 	public Object get(String id) {
-		AbstractHttpRequest httpRequest = aGetRequest(baseUri + "objects/" + id, new JerseyHttpRequestSender())
-				.accept("application/json").headers(headers).secure(new SSLConfig()).build();
-
-		return syncInvoker.invoke(httpRequest);
+		return newGetRequest(baseUri + "objects/" + id, httpRequestSender).accept("application/json").headers(headers)
+				.secure(new SSLConfig()).getHttpResponse();
 	}
 
 	@Override
 	public void getAll() {
-		AbstractHttpRequest httpRequest = aGetRequest(baseUri + "objects", new ApacheHttpRequestSender())
-				.accept("application/json").headers(headers).param("list", "true").secure(new SSLConfig()).build();
-
-		asyncInvoker.invoke(httpRequest, (httpResponse) -> {
-			// Fire an event with the Http Response
-		});
+		newGetRequest(baseUri + "objects", httpRequestSender).accept("application/json").headers(headers)
+				.param("list", "true").secure(new SSLConfig()).async((httpResponse) -> {
+					// Fire an event with HttpResponse;
+				}).getHttpResponse();
 	}
 
 	@Override
 	public boolean create(Object newObject) {
-		AbstractHttpRequest httpRequest = aPostRequest(baseUri + "newId", new JerseyHttpRequestSender(),
-				"Hello there, I am from open-http-client").headers(headers).contentType("text/plain").build();
-
-		return syncInvoker.invoke(httpRequest).getStatus() == 204;
+		// totally understand that decoding the below large statement may be difficult
+		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
+				.contentType("text/plain").getHttpResponse().orElseThrow(RuntimeException::new).getStatus() == 204;
 	}
 
 	@Override

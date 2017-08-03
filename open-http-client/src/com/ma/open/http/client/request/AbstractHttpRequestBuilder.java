@@ -116,12 +116,11 @@ public abstract class AbstractHttpRequestBuilder {
 		return requestSender;
 	}
 
-	public static AbstractHttpRequestBuilder aGetRequest(String url, IHttpRequestSender requestSender) {
+	static AbstractHttpRequestBuilder aGetRequest(String url, IHttpRequestSender requestSender) {
 		return new GetRequest.Builder(url, requestSender);
 	}
 
-	public static AbstractHttpRequestBuilder aPostRequest(String url, IHttpRequestSender requestSender,
-			Object content) {
+	static AbstractHttpRequestBuilder aPostRequest(String url, IHttpRequestSender requestSender, Object content) {
 		return new PostRequest.Builder(url, requestSender).content(content);
 	}
 
