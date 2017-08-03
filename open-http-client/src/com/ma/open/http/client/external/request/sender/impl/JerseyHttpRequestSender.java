@@ -16,13 +16,13 @@ public class JerseyHttpRequestSender implements IHttpRequestSender {
 	@Override
 	public HttpResponse get(AbstractHttpRequest getRequest) {
 		// TODO Auto-generated method stub
-		return null;
+		return new HttpResponse(200).withBody("Hello Open Http Client. I know you are there with my client");
 	}
 
 	@Override
 	public HttpResponse post(AbstractHttpRequest postRequest) {
 		// TODO Auto-generated method stub
-		return null;
+		return new HttpResponse(204);
 	}
 
 }

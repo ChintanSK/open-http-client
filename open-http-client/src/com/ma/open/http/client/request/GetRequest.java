@@ -6,7 +6,6 @@ class GetRequest extends AbstractHttpRequest {
 
 	private GetRequest(Builder builder) {
 		super(builder);
-		this.requestSender = builder.requestSender;
 	}
 
 	@Override

@@ -4,23 +4,21 @@ import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 class PostRequest extends AbstractHttpRequest {
 
-	private Object content;
+	private Object requestBody;
 
 	private PostRequest(Builder builder) {
 		super(builder);
-		this.content = builder.content;
+		this.requestBody = builder.requestBody;
 	}
 
 	@Override
 	public HttpResponse send() {
-		System.out.println(
-				"PostRequest.send sending " + content.toString() + "to " + requestSender.getClass().getSimpleName());
+		System.out.println("PostRequest.send sending " + requestBody.toString() + "to "
+				+ requestSender.getClass().getSimpleName());
 		return requestSender.post(this);
 	}
 
 	static class Builder extends AbstractHttpRequestBuilder {
-
-		private Object content;
 
 		public Builder(String url, IHttpRequestSender requestSender) {
 			this.url = url;

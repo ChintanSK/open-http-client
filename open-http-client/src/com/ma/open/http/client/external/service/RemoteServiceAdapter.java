@@ -32,7 +32,7 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 	@Override
 	public Object get(String id) {
 		return newGetRequest(baseUri + "objects/" + id, httpRequestSender).accept("application/json").headers(headers)
-				.secure(new SSLConfig()).getHttpResponse();
+				.secure(new SSLConfig()).getHttpResponse().orElseThrow(RuntimeException::new).getBody();
 	}
 
 	@Override

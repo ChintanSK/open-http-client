@@ -20,6 +20,7 @@ public abstract class AbstractHttpRequest {
 		this.headers = abstractBuilder.getHeaders();
 		this.params = abstractBuilder.getParams();
 		this.requestConfig = abstractBuilder.getRequestConfig();
+		this.requestSender = abstractBuilder.getRequestSender();
 	}
 
 	public abstract HttpResponse send();
