@@ -2,7 +2,7 @@ package com.ma.open.http.client.request;
 
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
-public class PostRequest extends AbstractHttpRequest {
+class PostRequest extends AbstractHttpRequest {
 
 	private Object content;
 
@@ -18,7 +18,7 @@ public class PostRequest extends AbstractHttpRequest {
 		return requestSender.post(this);
 	}
 
-	public static class Builder extends AbstractHttpRequestBuilder {
+	static class Builder extends AbstractHttpRequestBuilder {
 
 		private Object content;
 
@@ -30,11 +30,6 @@ public class PostRequest extends AbstractHttpRequest {
 		@Override
 		public AbstractHttpRequest build() {
 			return new PostRequest(this);
-		}
-
-		public Builder content(Object content) {
-			this.content = content;
-			return this;
 		}
 
 	}

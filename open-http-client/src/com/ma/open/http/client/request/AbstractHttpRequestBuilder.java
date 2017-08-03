@@ -15,6 +15,7 @@ public abstract class AbstractHttpRequestBuilder {
 	protected Map<String, List<String>> params;
 	protected Map<String, Object> requestConfig;
 	protected IHttpRequestSender requestSender;
+	protected Object requestBody;
 
 	public abstract AbstractHttpRequest build();
 
@@ -86,6 +87,11 @@ public abstract class AbstractHttpRequestBuilder {
 		return this;
 	}
 
+	public AbstractHttpRequestBuilder content(Object requestBody) {
+		this.requestBody = requestBody;
+		return this;
+	}
+
 	public AbstractHttpRequestBuilder secure(SSLConfig sslConfig) {
 		return new SecureRequest.Builder(this, sslConfig);
 	}
@@ -110,11 +116,12 @@ public abstract class AbstractHttpRequestBuilder {
 		return requestSender;
 	}
 
-	public static GetRequest.Builder aGetRequest(String url, IHttpRequestSender requestSender) {
+	public static AbstractHttpRequestBuilder aGetRequest(String url, IHttpRequestSender requestSender) {
 		return new GetRequest.Builder(url, requestSender);
 	}
 
-	public static PostRequest.Builder aPostRequest(String url, IHttpRequestSender requestSender, Object content) {
+	public static AbstractHttpRequestBuilder aPostRequest(String url, IHttpRequestSender requestSender,
+			Object content) {
 		return new PostRequest.Builder(url, requestSender).content(content);
 	}
 

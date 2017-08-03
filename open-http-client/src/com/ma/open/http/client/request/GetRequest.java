@@ -2,7 +2,7 @@ package com.ma.open.http.client.request;
 
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
-public class GetRequest extends AbstractHttpRequest {
+class GetRequest extends AbstractHttpRequest {
 
 	private GetRequest(Builder builder) {
 		super(builder);
@@ -15,7 +15,7 @@ public class GetRequest extends AbstractHttpRequest {
 		return requestSender.get(this);
 	}
 
-	public static class Builder extends AbstractHttpRequestBuilder {
+	static class Builder extends AbstractHttpRequestBuilder {
 
 		public Builder(String url, IHttpRequestSender requestSender) {
 			this.url = url;
@@ -25,6 +25,11 @@ public class GetRequest extends AbstractHttpRequest {
 		@Override
 		public AbstractHttpRequest build() {
 			return new GetRequest(this);
+		}
+
+		@Override
+		public AbstractHttpRequestBuilder content(Object requestBody) {
+			return this;
 		}
 
 	}
