@@ -11,6 +11,7 @@ public abstract class AbstractHttpRequest {
 	protected Map<String, List<String>> params;
 	protected Map<String, Object> requestConfig;
 	protected IHttpRequestSender requestSender;
+	protected Object requestBody;
 
 	protected AbstractHttpRequest() {
 	}
@@ -21,6 +22,7 @@ public abstract class AbstractHttpRequest {
 		this.params = abstractBuilder.getParams();
 		this.requestConfig = abstractBuilder.getRequestConfig();
 		this.requestSender = abstractBuilder.getRequestSender();
+		this.requestBody = abstractBuilder.getRequestBody();
 	}
 
 	public abstract HttpResponse send();
@@ -46,6 +48,10 @@ public abstract class AbstractHttpRequest {
 	}
 
 	protected SSLConfig getSslConfig() {
+		return null;
+	}
+
+	protected Object getRequestBody() {
 		return null;
 	}
 

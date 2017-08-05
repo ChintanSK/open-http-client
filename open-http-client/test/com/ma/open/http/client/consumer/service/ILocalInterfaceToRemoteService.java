@@ -1,10 +1,12 @@
-package com.ma.open.http.client.external.service;
+package com.ma.open.http.client.consumer.service;
+
+import java.util.function.Supplier;
 
 public interface ILocalInterfaceToRemoteService {
 
 	Object get(String id);
 
-	void getAll();
+	Supplier<Object> getAll();
 
 	boolean create(Object newObject);
 

@@ -17,26 +17,21 @@ Both the above experience led to the problem definition - "Using various HTTP Cl
 With the limited knowledge of the design patterns and industry experience, this is a small and humble effort in solving the above stated problem.
 
 ## Class Diagram
-![Class Diagram](uml/class-diagram.png)
+![Class Diagram](uml/high-level-class-diagram.png)
 
 ## Design Patterns Used:
-<ul><li>Adapter</li>
-<li>Command</li>
-<li>Decorator</li>
-<li>Builder</li></ul>
+<ul>
+	<li>Facade</li>
+	<li>Command</li>
+	<li>Decorator</li>
+	<li>Builder</li>
+	<li>Strategy</li>
+</ul>
 
 ## Long story cut short
-<ol>
-	<li>Any local application service calls the expected ILocalInterfaceToRemoteService</li>
-	<li>ILocalInterfaceRemoteService 's implementation - RemoteServiceAdapter - wraps the Sync/Async RequestInvoker s</li>
-	<li>RemoteServiceAdapter,<br>
-		<ul>
-			<li>builds a command (AbstractHttpRequest) using the (decorated) builders (AbstractHttpRequestBuilder 's hierarchy), </li>
-			<li>sets one sender (one of the IHttpRequestSender implementations) to the command, and, </li>
-			<li>sends it to the invoker</li>
-		</ul>
-	</li>
-	<li>The invoker executes the command (by calling send() on the AbstractHttpRequest)</li>
-	<li>The command delegates to the sender set within</li>
-	<li>The sender uses the command (as the context) to guide itself (with data and configuration) while sending the HTTP request</li>
-</ol>
+<p>
+	Any local application service would call OpenHttpClient Facade to build and send a AbstractHttpRequest Command to the IHttpRequestInvoker Command-Invoker.
+	Building an AbstractHttpRequest Command also involves choosing a concrete IHttpRequestSender Command-Receiver (also known as Request-Sender given the context)
+	The IHttpRequestInvoker Command-Invoker invokes the AbstractHttpRequest Command with zero or more IHttpRequestInvoker Decorators
+	The AbstractHttpRequest Command when invoked, executes the IHttpRequestSender Command-Receiver methods to send http requests and receive http responses
+</p>

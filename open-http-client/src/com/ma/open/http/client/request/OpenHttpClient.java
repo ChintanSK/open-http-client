@@ -1,18 +1,16 @@
 package com.ma.open.http.client.request;
 
+import static com.ma.open.http.client.request.invoker.IHttpRequestInvoker.requestInvoker;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.concurrent.Future;
 
-import com.ma.open.http.client.request.invoker.AsyncRequestInvoker;
-import com.ma.open.http.client.request.invoker.SyncRequestInvoker;
+import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
+import com.ma.open.http.client.request.invoker.IRetryPolicy;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 public final class OpenHttpClient {
-
-	private static final SyncRequestInvoker syncInvoker = new SyncRequestInvoker();
-	private static final AsyncRequestInvoker asyncInvoker = new AsyncRequestInvoker();
 
 	public static InvocationBuilder newGetRequest(String url, IHttpRequestSender requestSender) {
 		return new InvocationBuilder(AbstractHttpRequestBuilder.aGetRequest(url, requestSender));
@@ -22,36 +20,33 @@ public final class OpenHttpClient {
 		return new InvocationBuilder(AbstractHttpRequestBuilder.aPostRequest(url, requestSender, requestBody));
 	}
 
-	public static HttpResponse sendSync(AbstractHttpRequest httpRequest) {
-		return syncInvoker.invoke(httpRequest);
-	}
-
-	public static void sendAsync(AbstractHttpRequest httpRequest, Consumer<HttpResponse> httpResponseConsumer) {
-		asyncInvoker.invoke(httpRequest, httpResponseConsumer);
-	}
-
 	public final static class InvocationBuilder {
 		private AbstractHttpRequestBuilder wrappedBuilder;
-		private boolean isSynchronous = true;
-		private Consumer<HttpResponse> httpResponseConsumer;
+		private IHttpRequestInvoker invoker = requestInvoker;
 
 		public InvocationBuilder(AbstractHttpRequestBuilder builder) {
 			this.wrappedBuilder = builder;
 		}
 
-		public InvocationBuilder async(Consumer<HttpResponse> httpResponseConsumer) {
-			this.httpResponseConsumer = httpResponseConsumer;
-			isSynchronous = false;
-			return this;
+		public HttpResponse send() {
+			try {
+				return invoker.invoke(wrappedBuilder.build());
+			} finally {
+				wrappedBuilder = null;
+			}
 		}
 
-		public Optional<HttpResponse> getHttpResponse() {
-			if (isSynchronous) {
-				return Optional.of(OpenHttpClient.sendSync(wrappedBuilder.build()));
-			} else {
-				OpenHttpClient.sendAsync(wrappedBuilder.build(), httpResponseConsumer);
-				return Optional.empty();
+		public Future<HttpResponse> sendAsync() {
+			try {
+				return invoker.invokeAsync(wrappedBuilder.build());
+			} finally {
+				wrappedBuilder = null;
 			}
+		}
+
+		public InvocationBuilder retry(IRetryPolicy retryPolicy) {
+			invoker = IHttpRequestInvoker.retriableInvoker(retryPolicy);
+			return this;
 		}
 
 		public InvocationBuilder header(String name, String... values) {

@@ -116,6 +116,10 @@ public abstract class AbstractHttpRequestBuilder {
 		return requestSender;
 	}
 
+	public Object getRequestBody() {
+		return requestBody;
+	}
+
 	static AbstractHttpRequestBuilder aGetRequest(String url, IHttpRequestSender requestSender) {
 		return new GetRequest.Builder(url, requestSender);
 	}

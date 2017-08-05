@@ -10,7 +10,6 @@ class GetRequest extends AbstractHttpRequest {
 
 	@Override
 	public HttpResponse send() {
-		System.out.println("GetRequest.send fetching content from " + requestSender.getClass().getSimpleName());
 		return requestSender.get(this);
 	}
 

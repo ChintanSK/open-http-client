@@ -12,8 +12,6 @@ public class SecureRequest extends AbstractHttpRequest {
 
 	@Override
 	public HttpResponse send() {
-		System.out.println(
-				"SecureRequest.send configuring ssl on the requestSender " + requestSender.getClass().getSimpleName());
 		requestSender.configureSsl(sslConfig);
 		return wrappedRequest.send();
 	}
