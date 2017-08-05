@@ -1,16 +1,16 @@
 package com.ma.open.http.client.request.invoker;
 
-import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public final class RetryPolicies {
 
 	public static final IRetryPolicy FIXED_DELAY = new AbstractRetryPolicy() {
 
 		@Override
-		public Supplier<Long> nextInterval() {
-			return () -> {
-				return 2000L;
-			};
+		public IntStream intervals() {
+			return IntStream.generate(() -> {
+				return 2000;
+			});
 		}
 
 	};

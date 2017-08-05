@@ -2,6 +2,7 @@ package com.ma.open.http.client.request.invoker;
 
 import static java.lang.Thread.sleep;
 
+import java.util.PrimitiveIterator.OfInt;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -21,12 +22,13 @@ class RetriableHttpRequestInvoker implements IHttpRequestInvoker {
 	@Override
 	public HttpResponse invoke(AbstractHttpRequest httpRequest) {
 		HttpResponse httpResponse = null;
+		OfInt intervals = retryPolicy.intervals().iterator();
 		int attempts = -1;
 		do {
 			try {
 				attempts++;
 				if (attempts > 0) {
-					sleep(retryPolicy.nextInterval().get());
+					sleep(intervals.nextInt());
 				}
 				httpResponse = invoker.invoke(httpRequest);
 			} catch (Exception e) {
