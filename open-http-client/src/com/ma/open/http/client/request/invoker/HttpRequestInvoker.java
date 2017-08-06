@@ -11,10 +11,9 @@ import com.ma.open.http.client.request.HttpResponse;
 class HttpRequestInvoker implements IHttpRequestInvoker {
 
 	HttpRequestInvoker() {
-		// TODO Auto-generated constructor stub
 	}
 
-	static final ExecutorService POOL = Executors.newCachedThreadPool();
+	static final ExecutorService POOL = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
 	@Override
 	public HttpResponse invoke(AbstractHttpRequest httpRequest) {

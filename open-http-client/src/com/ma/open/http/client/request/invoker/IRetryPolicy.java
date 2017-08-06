@@ -7,12 +7,12 @@ import com.ma.open.http.client.request.HttpResponse;
 
 public interface IRetryPolicy {
 
-	int maxCount();
+	int maxAttempts();
 
 	IntStream intervals();
 
 	boolean failOnException();
 
-	Predicate<HttpResponse> shouldContinue();
+	Predicate<HttpResponse> shouldContinueRetrying();
 
 }

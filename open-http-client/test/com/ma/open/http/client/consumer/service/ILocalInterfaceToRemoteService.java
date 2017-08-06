@@ -12,4 +12,6 @@ public interface ILocalInterfaceToRemoteService {
 
 	boolean remove(String id);
 
+	boolean createWithRetryAttempts(Object newObject);
+
 }

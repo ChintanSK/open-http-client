@@ -6,8 +6,10 @@ import com.ma.open.http.client.request.HttpResponse;
 
 public abstract class AbstractRetryPolicy implements IRetryPolicy {
 
+	static final int MAX_ATTEMPTS = 5;
+
 	@Override
-	public int maxCount() {
+	public int maxAttempts() {
 		return 3;
 	}
 
@@ -17,9 +19,11 @@ public abstract class AbstractRetryPolicy implements IRetryPolicy {
 	}
 
 	@Override
-	public Predicate<HttpResponse> shouldContinue() {
+	public Predicate<HttpResponse> shouldContinueRetrying() {
 		return (r) -> {
-			return (r.getStatus() == 200 && r.getBody() != null) || r.getStatus() == 204;
+			if (r == null)
+				return true;
+			return !((r.getStatus() == 200 && r.getBody() != null) || r.getStatus() == 204);
 		};
 	}
 

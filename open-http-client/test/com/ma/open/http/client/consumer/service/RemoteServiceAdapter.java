@@ -9,12 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import com.ma.open.http.client.request.HttpResponse;
 import com.ma.open.http.client.request.SSLConfig;
+import com.ma.open.http.client.request.invoker.RetryPolicies;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
@@ -48,8 +47,11 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 
 		return () -> {
 			try {
-				return futureHttpResponse.get(5000L, TimeUnit.MILLISECONDS).getBody();
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+				while (!futureHttpResponse.isDone()) {
+					System.out.println("Still waiting...");
+				}
+				return futureHttpResponse.get().getBody();
+			} catch (InterruptedException | ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -62,6 +64,13 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 		// totally understand that decoding the below large statement may be difficult
 		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
 				.contentType("text/plain").send().getStatus() == 204;
+	}
+
+	@Override
+	public boolean createWithRetryAttempts(Object newObject) {
+		// totally understand that decoding the below large statement may be difficult
+		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
+				.contentType("text/plain").retry(RetryPolicies.FIBONACCI_DELAY).send().getStatus() == 204;
 	}
 
 	@Override

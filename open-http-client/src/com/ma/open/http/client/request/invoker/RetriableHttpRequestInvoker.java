@@ -1,5 +1,7 @@
 package com.ma.open.http.client.request.invoker;
 
+import static com.ma.open.http.client.request.invoker.AbstractRetryPolicy.MAX_ATTEMPTS;
+import static com.ma.open.http.client.request.invoker.HttpRequestInvoker.POOL;
 import static java.lang.Thread.sleep;
 
 import java.util.PrimitiveIterator.OfInt;
@@ -28,6 +30,7 @@ class RetriableHttpRequestInvoker implements IHttpRequestInvoker {
 			try {
 				attempts++;
 				if (attempts > 0) {
+					System.out.println("attempt " + attempts);
 					sleep(intervals.nextInt());
 				}
 				httpResponse = invoker.invoke(httpRequest);
@@ -36,13 +39,14 @@ class RetriableHttpRequestInvoker implements IHttpRequestInvoker {
 					throw new RuntimeException(e);
 				}
 			}
-		} while (attempts < retryPolicy.maxCount() && retryPolicy.shouldContinue().test(httpResponse));
+		} while (attempts < retryPolicy.maxAttempts() && attempts < MAX_ATTEMPTS
+				&& retryPolicy.shouldContinueRetrying().test(httpResponse));
 		return httpResponse;
 	}
 
 	@Override
 	public Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest) {
-		return HttpRequestInvoker.POOL.submit(new Callable<HttpResponse>() {
+		return POOL.submit(new Callable<HttpResponse>() {
 
 			@Override
 			public HttpResponse call() throws Exception {
