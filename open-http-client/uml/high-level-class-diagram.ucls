@@ -69,8 +69,9 @@
       <operations public="true" package="false" protected="true" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="8" language="java" name="com.ma.open.http.client.request.SecureRequest.Builder" project="open-http-client" 
-    file="/open-http-client/src/com/ma/open/http/client/request/SecureRequest.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="8" language="java" name="com.ma.open.http.client.request.ssl.SecureRequestuest.Builder" 
+    project="open-http-client" file="/open-http-client/src/com/ma/open/http/client/request/ssl/SecureRequest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1443" y="715"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -78,8 +79,9 @@
       <operations public="true" package="false" protected="true" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="com.ma.open.http.client.request.SecureRequest" project="open-http-client" 
-    file="/open-http-client/src/com/ma/open/http/client/request/SecureRequest.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" languagecom.ma.open.http.client.request.ssl.SecureRequest.ssl.SecureRequest" project="open-http-client" 
+    file="/open-http-client/src/com/ma/open/http/client/request/ssl/SecureRequest.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="983" y="716"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -156,139 +158,135 @@
     <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
-  <generalization id="17">    
-    <bendpoint x="1754" y="610"/>    
-    <bendpoint x="1754" y="356"/>    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <dependency id="18">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <association id="19">    
-    <bendpoint x="676" y="311"/>    
-    <bendpoint x="676" y="769"/>    
-    <bendpoint x="1923" y="769"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="20" name="requestSender">        
-        <position height="0" width="0" x="87" y="-29"/>      
-      </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
-        <position height="0" width="0" x="87" y="-29"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <generalization id="22">    
+  <nesting id="17">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="8"/>  
+  </nesting>  
+  <generalization id="18">    
     <bendpoint x="753" y="611"/>    
     <bendpoint x="753" y="332"/>    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
-  <association id="23">    
+  <dependency id="19">    
+    <bendpoint x="254" y="-333"/>    
+    <bendpoint x="1922" y="-333"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <generalization id="20">    
+    <bendpoint x="1754" y="501"/>    
+    <bendpoint x="1754" y="356"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <generalization id="22">    
+    <bendpoint x="1754" y="610"/>    
+    <bendpoint x="1754" y="356"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="23">    
+    <bendpoint x="1754" y="715"/>    
+    <bendpoint x="1754" y="356"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="24">    
     <bendpoint x="1442" y="-112"/>    
     <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="24" name="wrappedBuilder">        
+      <attribute id="25" name="wrappedBuilder">        
         <position height="0" width="0" x="-230" y="24"/>      
       </attribute>      
-      <multiplicity id="25" minimum="0" maximum="1">        
+      <multiplicity id="26" minimum="0" maximum="1">        
         <position height="0" width="0" x="-230" y="24"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="false" multiplicity="true"/>  
   </association>  
-  <realization id="26">    
-    <bendpoint x="157" y="507"/>    
-    <bendpoint x="157" y="223"/>    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="12"/>  
-  </realization>  
-  <dependency id="27">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="14"/>  
-  </dependency>  
-  <association id="28">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="29" name="retryPolicy">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="30" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="15" navigable="true"/>    
-    <display labels="false" multiplicity="true"/>  
-  </association>  
-  <association id="31">    
+  <association id="27">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="32" name="requestSender">        
+      <attribute id="28" name="requestSender">        
         <position height="0" width="0" x="87" y="-29"/>      
       </attribute>      
-      <multiplicity id="33" minimum="0" maximum="1">        
+      <multiplicity id="29" minimum="0" maximum="1">        
         <position height="0" width="0" x="87" y="-29"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="false" multiplicity="true"/>  
   </association>  
-  <nesting id="34">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="6"/>  
-  </nesting>  
-  <dependency id="35">    
-    <bendpoint x="254" y="-333"/>    
-    <bendpoint x="1922" y="-333"/>    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <realization id="36">    
-    <bendpoint x="157" y="379"/>    
-    <bendpoint x="157" y="224"/>    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="12"/>  
-  </realization>  
-  <dependency id="37">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <dependency id="38">    
+  <association id="30">    
+    <bendpoint x="676" y="311"/>    
+    <bendpoint x="676" y="769"/>    
+    <bendpoint x="1923" y="769"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="31" name="requestSender">        
+        <position height="0" width="0" x="87" y="-29"/>      
+      </attribute>      
+      <multiplicity id="32" minimum="0" maximum="1">        
+        <position height="0" width="0" x="87" y="-29"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <dependency id="33">    
     <end type="SOURCE" refId="12"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <nesting id="39">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="4"/>  
-  </nesting>  
-  <nesting id="40">    
+  <dependency id="34">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <nesting id="35">    
     <bendpoint x="288" y="-112"/>    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="10"/>  
   </nesting>  
-  <generalization id="41">    
-    <bendpoint x="1754" y="501"/>    
-    <bendpoint x="1754" y="356"/>    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="42">    
-    <bendpoint x="1754" y="715"/>    
-    <bendpoint x="1754" y="356"/>    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <nesting id="43">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="8"/>  
-  </nesting>  
-  <generalization id="44">    
+  <association id="36">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="37" name="retryPolicy">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <realization id="39">    
+    <bendpoint x="157" y="507"/>    
+    <bendpoint x="157" y="223"/>    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <generalization id="40">    
     <bendpoint x="753" y="716"/>    
     <bendpoint x="753" y="332"/>    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
+  <nesting id="41">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </nesting>  
+  <realization id="42">    
+    <bendpoint x="157" y="379"/>    
+    <bendpoint x="157" y="224"/>    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <nesting id="43">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
   <classifier-display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="false" protected="true" private="false" static="true"/>    

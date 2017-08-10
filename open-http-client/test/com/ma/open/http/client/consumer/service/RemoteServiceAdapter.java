@@ -2,6 +2,7 @@ package com.ma.open.http.client.consumer.service;
 
 import static com.ma.open.http.client.request.OpenHttpClient.newGetRequest;
 import static com.ma.open.http.client.request.OpenHttpClient.newPostRequest;
+import static com.ma.open.http.client.request.ssl.SSLConfig.newSSLConfig;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,9 +13,9 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import com.ma.open.http.client.request.HttpResponse;
-import com.ma.open.http.client.request.SSLConfig;
 import com.ma.open.http.client.request.invoker.RetryPolicies;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
+import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 
@@ -37,13 +38,14 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 	@Override
 	public Object get(String id) {
 		return newGetRequest(baseUri + "objects/" + id, httpRequestSender).accept("application/json").headers(headers)
-				.secure(new SSLConfig()).send().getBody();
+				.secure(newSSLConfig().getSSLConfig()).send().getBody();
 	}
 
 	@Override
 	public Supplier<Object> getAll() {
 		Future<HttpResponse> futureHttpResponse = newGetRequest(baseUri + "objects", httpRequestSender)
-				.accept("application/json").headers(headers).param("list", "true").secure(new SSLConfig()).sendAsync();
+				.accept("application/json").headers(headers).param("list", "true").secure(newSSLConfig().getSSLConfig())
+				.sendAsync();
 
 		return () -> {
 			try {

@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
 import com.ma.open.http.client.request.invoker.IRetryPolicy;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
+import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public final class OpenHttpClient {
 

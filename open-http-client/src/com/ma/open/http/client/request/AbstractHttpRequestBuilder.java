@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
+import com.ma.open.http.client.request.ssl.SSLConfig;
+import com.ma.open.http.client.request.ssl.SecureRequest;
 
 public abstract class AbstractHttpRequestBuilder {
 

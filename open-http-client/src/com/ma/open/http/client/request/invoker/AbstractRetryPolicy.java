@@ -10,7 +10,7 @@ public abstract class AbstractRetryPolicy implements IRetryPolicy {
 
 	@Override
 	public int maxAttempts() {
-		return 3;
+		return MAX_ATTEMPTS;
 	}
 
 	@Override
@@ -23,6 +23,8 @@ public abstract class AbstractRetryPolicy implements IRetryPolicy {
 		return (r) -> {
 			if (r == null)
 				return true;
+			if (r.getHeaders() != null && r.getHeaders().containsKey("Retry-After"))
+				return false;
 			return !((r.getStatus() == 200 && r.getBody() != null) || r.getStatus() == 204);
 		};
 	}

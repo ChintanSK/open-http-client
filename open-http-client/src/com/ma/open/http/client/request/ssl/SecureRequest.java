@@ -1,4 +1,8 @@
-package com.ma.open.http.client.request;
+package com.ma.open.http.client.request.ssl;
+
+import com.ma.open.http.client.request.AbstractHttpRequest;
+import com.ma.open.http.client.request.AbstractHttpRequestBuilder;
+import com.ma.open.http.client.request.HttpResponse;
 
 public class SecureRequest extends AbstractHttpRequest {
 	private AbstractHttpRequest wrappedRequest;
@@ -6,7 +10,7 @@ public class SecureRequest extends AbstractHttpRequest {
 
 	private SecureRequest(Builder builder) {
 		this.wrappedRequest = builder.wrappedBuilder.build();
-		this.requestSender = this.wrappedRequest.requestSender;
+		this.requestSender = this.wrappedRequest.getRequestSender();
 		this.sslConfig = builder.sslConfig;
 	}
 
