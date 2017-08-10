@@ -1,5 +1,6 @@
 package com.ma.open.http.client.request.invoker;
 
+import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -9,9 +10,11 @@ public interface IRetryPolicy {
 
 	int maxAttempts();
 
+	Duration maxTurnAroundTime();
+
 	IntStream intervals();
 
-	boolean failOnException();
+	boolean failOnException(Exception e);
 
 	Predicate<HttpResponse> shouldContinueRetrying();
 

@@ -4,9 +4,12 @@ import static com.ma.open.http.client.request.invoker.AbstractRetryPolicy.MAX_AT
 import static com.ma.open.http.client.request.invoker.HttpRequestInvoker.POOL;
 import static java.lang.Thread.sleep;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.PrimitiveIterator.OfInt;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.HttpResponse;
@@ -25,22 +28,29 @@ class RetriableHttpRequestInvoker implements IHttpRequestInvoker {
 	public HttpResponse invoke(AbstractHttpRequest httpRequest) {
 		HttpResponse httpResponse = null;
 		OfInt intervals = retryPolicy.intervals().iterator();
+		Instant invocationStartInstant = Instant.now();
 		int attempts = -1;
 		do {
 			try {
 				attempts++;
+				if (Duration.between(invocationStartInstant, Instant.now())
+						.compareTo(retryPolicy.maxTurnAroundTime()) > 0) {
+					throw new TimeoutException("Request timed out");
+				}
 				if (attempts > 0) {
-					System.out.println("attempt " + attempts);
+					System.out.println("DEBUG: " + "attempt " + attempts);
 					sleep(intervals.nextInt());
 				}
 				httpResponse = invoker.invoke(httpRequest);
+				if (attempts >= retryPolicy.maxAttempts() || attempts >= MAX_ATTEMPTS) {
+					throw new TimeoutException("Maximum retrial attempts exceeded");
+				}
 			} catch (Exception e) {
-				if (retryPolicy.failOnException()) {
+				if (retryPolicy.failOnException(e)) {
 					throw new RuntimeException(e);
 				}
 			}
-		} while (attempts < retryPolicy.maxAttempts() && attempts < MAX_ATTEMPTS
-				&& retryPolicy.shouldContinueRetrying().test(httpResponse));
+		} while (retryPolicy.shouldContinueRetrying().test(httpResponse));
 		return httpResponse;
 	}
 

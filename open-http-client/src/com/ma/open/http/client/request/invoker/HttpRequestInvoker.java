@@ -26,7 +26,7 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 
 			@Override
 			public HttpResponse call() throws Exception {
-				return httpRequest.send();
+				return invoke(httpRequest);
 			}
 
 		});
