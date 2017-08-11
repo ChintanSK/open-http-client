@@ -31,7 +31,7 @@ public abstract class AbstractRetryPolicy implements IRetryPolicy {
 			if (r == null)
 				return true;
 			if (r.getHeaders() != null && r.getHeaders().containsKey("Retry-After"))
-				return false;
+				return true;
 			return !((r.getStatus() == 200 && r.getBody() != null) || r.getStatus() == 204);
 		};
 	}

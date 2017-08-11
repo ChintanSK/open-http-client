@@ -18,4 +18,8 @@ public interface IRetryPolicy {
 
 	Predicate<HttpResponse> shouldContinueRetrying();
 
+	default boolean retryAfterEnabled() {
+		return false;
+	}
+
 }

@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 import com.ma.open.http.client.request.HttpResponse;
 import com.ma.open.http.client.request.invoker.RetryPolicies;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
-import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 
@@ -65,7 +64,7 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 	public boolean create(Object newObject) {
 		// totally understand that decoding the below large statement may be difficult
 		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
-				.contentType("text/plain").send().getStatus() == 204;
+				.contentType("text/plain").enableRetryAfterHandling().send().getStatus() == 204;
 	}
 
 	@Override

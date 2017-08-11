@@ -1,5 +1,8 @@
 package com.ma.open.http.client.request.sender;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.HttpResponse;
 import com.ma.open.http.client.request.ssl.SSLConfig;
@@ -21,7 +24,9 @@ public class ApacheHttpRequestSender implements IHttpRequestSender {
 	@Override
 	public HttpResponse post(AbstractHttpRequest postRequest) {
 		// TODO Auto-generated method stub
-		return new HttpResponse(404);
+		Map<String, String> responseHeaders = new HashMap<>();
+		responseHeaders.put("Retry-After", "Tue, 15 Aug 2017 17:00:00 GMT");
+		return new HttpResponse(301).withHeaders(responseHeaders);
 	}
 
 }

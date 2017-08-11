@@ -41,6 +41,18 @@ public final class RetryPolicies {
 		}
 	};
 
+	public static final IRetryPolicy RETRY_AFTER_RESPONSE_HEADER_DELAY = new AbstractRetryPolicy() {
+		@Override
+		public IntStream intervals() {
+			return IntStream.empty();
+		}
+
+		@Override
+		public boolean retryAfterEnabled() {
+			return true;
+		}
+	};
+
 	private RetryPolicies() {
 	}
 }
