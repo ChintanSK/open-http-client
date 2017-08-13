@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.HttpResponse;
+import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public class ApacheHttpRequestSender implements IHttpRequestSender {
@@ -25,7 +25,8 @@ public class ApacheHttpRequestSender implements IHttpRequestSender {
 	public HttpResponse post(AbstractHttpRequest postRequest) {
 		// TODO Auto-generated method stub
 		Map<String, String> responseHeaders = new HashMap<>();
-		responseHeaders.put("Retry-After", "Tue, 15 Aug 2017 17:00:00 GMT");
+//		responseHeaders.put("Retry-After", "Tue, 15 Aug 2017 17:00:00 GMT");
+		responseHeaders.put("Retry-After", "3");
 		return new HttpResponse(301).withHeaders(responseHeaders);
 	}
 

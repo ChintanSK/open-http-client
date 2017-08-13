@@ -3,18 +3,25 @@ package com.ma.open.http.client.request.invoker;
 import java.util.concurrent.Future;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.HttpResponse;
+import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.HttpResponse;
 
 public interface IHttpRequestInvoker {
 
-	public static final IHttpRequestInvoker requestInvoker = new HttpRequestInvoker();
+	static IHttpRequestInvoker newInvoker() {
+		return new HttpRequestInvoker();
+	}
 
-	HttpResponse invoke(AbstractHttpRequest httpRequest);
+	static IHttpRequestInvoker newRetriableInvoker(IRetryPolicy retryPolicy) {
+		return new RetriableHttpRequestInvoker(retryPolicy);
+	}
 
-	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest);
+	HttpResponse invoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler callback);
 
-	public static IHttpRequestInvoker retriableInvoker(IRetryPolicy retryPolicy) {
-		return new RetriableHttpRequestInvoker(requestInvoker, retryPolicy);
+	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest, FutureHttpResponseHandler callback);
+
+	default boolean isResponseHandled() {
+		return false;
 	}
 
 }

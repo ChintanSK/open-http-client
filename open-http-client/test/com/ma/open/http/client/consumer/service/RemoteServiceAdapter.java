@@ -12,8 +12,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
-import com.ma.open.http.client.request.HttpResponse;
 import com.ma.open.http.client.request.invoker.RetryPolicies;
+import com.ma.open.http.client.request.response.HttpResponse;
+import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
@@ -28,6 +29,15 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 		}
 	};
 
+	private IDelayedHttpResponseHandler delayedHttpResponseHandler = new IDelayedHttpResponseHandler() {
+
+		@Override
+		public void handleDelayedHttpResponse(HttpResponse delayedHttpResponse) {
+			System.out.println("Debug: Http Response, status:" + delayedHttpResponse.getStatus() + " body:"
+					+ delayedHttpResponse.getBody());
+		}
+	};
+
 	private IHttpRequestSender httpRequestSender;
 
 	public RemoteServiceAdapter(IHttpRequestSender httpRequestSender) {
@@ -37,23 +47,22 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 	@Override
 	public Object get(String id) {
 		return newGetRequest(baseUri + "objects/" + id, httpRequestSender).accept("application/json").headers(headers)
-				.secure(newSSLConfig().getSSLConfig()).send().getBody();
+				.secure(newSSLConfig().getSSLConfig()).send(delayedHttpResponseHandler).getBody();
 	}
 
 	@Override
 	public Supplier<Object> getAll() {
-		Future<HttpResponse> futureHttpResponse = newGetRequest(baseUri + "objects", httpRequestSender)
-				.accept("application/json").headers(headers).param("list", "true").secure(newSSLConfig().getSSLConfig())
-				.sendAsync();
+		Future<HttpResponse> future = newGetRequest(baseUri + "objects", httpRequestSender).accept("application/json")
+				.headers(headers).param("list", "true").secure(newSSLConfig().getSSLConfig())
+				.sendAsync(delayedHttpResponseHandler);
 
 		return () -> {
 			try {
-				while (!futureHttpResponse.isDone()) {
+				while (!future.isDone()) {
 					System.out.println("Still waiting...");
 				}
-				return futureHttpResponse.get().getBody();
+				return future.get().getBody();
 			} catch (InterruptedException | ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
@@ -64,14 +73,15 @@ public class RemoteServiceAdapter implements ILocalInterfaceToRemoteService {
 	public boolean create(Object newObject) {
 		// totally understand that decoding the below large statement may be difficult
 		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
-				.contentType("text/plain").enableRetryAfterHandling().send().getStatus() == 204;
+				.contentType("text/plain").send(delayedHttpResponseHandler).getStatus() == 204;
 	}
 
 	@Override
 	public boolean createWithRetryAttempts(Object newObject) {
 		// totally understand that decoding the below large statement may be difficult
 		return newPostRequest(baseUri + "objects/" + "newId", httpRequestSender, newObject).headers(headers)
-				.contentType("text/plain").retry(RetryPolicies.FIBONACCI_DELAY).send().getStatus() == 204;
+				.contentType("text/plain").retry(RetryPolicies.FIBONACCI_DELAY).send(delayedHttpResponseHandler)
+				.getStatus() == 204;
 	}
 
 	@Override

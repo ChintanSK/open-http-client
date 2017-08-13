@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import com.ma.open.http.client.request.HttpResponse;
+import com.ma.open.http.client.request.response.HttpResponse;
 
 public interface IRetryPolicy {
 

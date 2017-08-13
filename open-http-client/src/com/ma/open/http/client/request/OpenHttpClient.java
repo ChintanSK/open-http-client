@@ -1,14 +1,14 @@
 package com.ma.open.http.client.request;
 
-import static com.ma.open.http.client.request.invoker.IHttpRequestInvoker.requestInvoker;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
 import com.ma.open.http.client.request.invoker.IRetryPolicy;
-import com.ma.open.http.client.request.invoker.RetryPolicies;
+import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.HttpResponse;
+import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 import com.ma.open.http.client.request.ssl.SSLConfig;
 
@@ -24,30 +24,30 @@ public final class OpenHttpClient {
 
 	public final static class InvocationBuilder {
 		private AbstractHttpRequestBuilder wrappedBuilder;
-		private IHttpRequestInvoker invoker = requestInvoker;
+		private IHttpRequestInvoker invoker = IHttpRequestInvoker.newInvoker();
 		private IRetryPolicy retryPolicy;
 
 		public InvocationBuilder(AbstractHttpRequestBuilder builder) {
 			this.wrappedBuilder = builder;
 		}
 
-		public HttpResponse send() {
+		public HttpResponse send(IDelayedHttpResponseHandler httpResponseHandler) {
 			if (retryPolicy != null) {
-				invoker = IHttpRequestInvoker.retriableInvoker(retryPolicy);
+				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
 			}
 			try {
-				return invoker.invoke(wrappedBuilder.build());
+				return invoker.invoke(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
 			} finally {
 				wrappedBuilder = null;
 			}
 		}
 
-		public Future<HttpResponse> sendAsync() {
+		public Future<HttpResponse> sendAsync(IDelayedHttpResponseHandler httpResponseHandler) {
 			if (retryPolicy != null) {
-				invoker = IHttpRequestInvoker.retriableInvoker(retryPolicy);
+				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
 			}
 			try {
-				return invoker.invokeAsync(wrappedBuilder.build());
+				return invoker.invokeAsync(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
 			} finally {
 				wrappedBuilder = null;
 			}
@@ -55,11 +55,6 @@ public final class OpenHttpClient {
 
 		public InvocationBuilder retry(IRetryPolicy retryPolicy) {
 			this.retryPolicy = retryPolicy;
-			return this;
-		}
-
-		public InvocationBuilder enableRetryAfterHandling() {
-			this.retryPolicy = RetryPolicies.RETRY_AFTER_RESPONSE_HEADER_DELAY;
 			return this;
 		}
 

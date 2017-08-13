@@ -1,5 +1,6 @@
 package com.ma.open.http.client.request;
 
+import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 
 class PostRequest extends AbstractHttpRequest {

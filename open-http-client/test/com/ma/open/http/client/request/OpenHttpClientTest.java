@@ -45,7 +45,7 @@ public class OpenHttpClientTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			System.exit(0);
+//			System.exit(0);
 		}
 	}
 

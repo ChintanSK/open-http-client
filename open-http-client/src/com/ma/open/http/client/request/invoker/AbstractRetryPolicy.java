@@ -3,7 +3,7 @@ package com.ma.open.http.client.request.invoker;
 import java.time.Duration;
 import java.util.function.Predicate;
 
-import com.ma.open.http.client.request.HttpResponse;
+import com.ma.open.http.client.request.response.HttpResponse;
 
 public abstract class AbstractRetryPolicy implements IRetryPolicy {
 

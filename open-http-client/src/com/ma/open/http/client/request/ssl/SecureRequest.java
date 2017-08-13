@@ -2,7 +2,7 @@ package com.ma.open.http.client.request.ssl;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.AbstractHttpRequestBuilder;
-import com.ma.open.http.client.request.HttpResponse;
+import com.ma.open.http.client.request.response.HttpResponse;
 
 public class SecureRequest extends AbstractHttpRequest {
 	private AbstractHttpRequest wrappedRequest;
