@@ -20,6 +20,8 @@ public interface IHttpRequestInvoker {
 
 	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest, FutureHttpResponseHandler callback);
 
+	void disableRetryAfter();
+
 	default boolean isResponseHandled() {
 		return false;
 	}

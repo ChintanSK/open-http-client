@@ -26,15 +26,14 @@ public final class OpenHttpClient {
 		private AbstractHttpRequestBuilder wrappedBuilder;
 		private IHttpRequestInvoker invoker = IHttpRequestInvoker.newInvoker();
 		private IRetryPolicy retryPolicy;
+		private boolean retryAfterDisabled;
 
 		public InvocationBuilder(AbstractHttpRequestBuilder builder) {
 			this.wrappedBuilder = builder;
 		}
 
 		public HttpResponse send(IDelayedHttpResponseHandler httpResponseHandler) {
-			if (retryPolicy != null) {
-				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
-			}
+			preSend();
 			try {
 				return invoker.invoke(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
 			} finally {
@@ -43,14 +42,26 @@ public final class OpenHttpClient {
 		}
 
 		public Future<HttpResponse> sendAsync(IDelayedHttpResponseHandler httpResponseHandler) {
-			if (retryPolicy != null) {
-				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
-			}
+			preSend();
 			try {
 				return invoker.invokeAsync(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
 			} finally {
 				wrappedBuilder = null;
 			}
+		}
+
+		private void preSend() {
+			if (retryPolicy != null) {
+				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
+			}
+			if (retryAfterDisabled) {
+				invoker.disableRetryAfter();
+			}
+		}
+
+		public InvocationBuilder disableRetryAfter() {
+			retryAfterDisabled = true;
+			return this;
 		}
 
 		public InvocationBuilder retry(IRetryPolicy retryPolicy) {

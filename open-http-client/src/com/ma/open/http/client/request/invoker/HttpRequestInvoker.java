@@ -19,8 +19,14 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 	static final ExecutorService POOL = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
 	private boolean responseHandled;
+	private boolean retryAfterEnabled = true;
 
 	HttpRequestInvoker() {
+	}
+
+	@Override
+	public void disableRetryAfter() {
+		retryAfterEnabled = false;
 	}
 
 	@Override
@@ -44,7 +50,7 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 
 	private HttpResponse doInvoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler responseHandler) {
 		final HttpResponse httpResponse = httpRequest.send().withHttpRequest(httpRequest);
-		if (retryAfter(httpResponse)) {
+		if (retryAfterEnabled && retryAfter(httpResponse)) {
 			responseHandled = true;
 			final ScheduledFuture<HttpResponse> delayedHttpResponse = scheduleHttpRequest(this, httpRequest,
 					httpResponse, responseHandler);
