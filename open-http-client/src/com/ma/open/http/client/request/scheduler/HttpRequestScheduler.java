@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
-import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 
 public enum HttpRequestScheduler {
@@ -18,7 +18,7 @@ public enum HttpRequestScheduler {
 	private ScheduledExecutorService POOL = Executors.newScheduledThreadPool(10);
 
 	public ScheduledFuture<HttpResponse> scheduleRequestInvocation(IHttpRequestInvoker invoker,
-			AbstractHttpRequest httpRequest, long delay, FutureHttpResponseHandler responseHandler) {
+			AbstractHttpRequest httpRequest, long delay, ScheduledHttpResponseHandler responseHandler) {
 		return POOL.schedule(new Callable<HttpResponse>() {
 
 			@Override

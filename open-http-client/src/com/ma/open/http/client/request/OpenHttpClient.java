@@ -6,7 +6,7 @@ import java.util.concurrent.Future;
 
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
 import com.ma.open.http.client.request.invoker.IRetryPolicy;
-import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
@@ -35,7 +35,7 @@ public final class OpenHttpClient {
 		public HttpResponse send(IDelayedHttpResponseHandler httpResponseHandler) {
 			preSend();
 			try {
-				return invoker.invoke(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
+				return invoker.invoke(wrappedBuilder.build(), new ScheduledHttpResponseHandler(httpResponseHandler));
 			} finally {
 				wrappedBuilder = null;
 			}
@@ -44,7 +44,7 @@ public final class OpenHttpClient {
 		public Future<HttpResponse> sendAsync(IDelayedHttpResponseHandler httpResponseHandler) {
 			preSend();
 			try {
-				return invoker.invokeAsync(wrappedBuilder.build(), new FutureHttpResponseHandler(httpResponseHandler));
+				return invoker.invokeAsync(wrappedBuilder.build(), new ScheduledHttpResponseHandler(httpResponseHandler));
 			} finally {
 				wrappedBuilder = null;
 			}

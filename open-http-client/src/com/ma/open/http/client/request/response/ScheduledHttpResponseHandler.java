@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class FutureHttpResponseHandler {
+public class ScheduledHttpResponseHandler {
 	private static final int DELAYED_RETRIALS_MAX_ATTEMPTS = 5;
 
 	private ScheduledExecutorService POOL = Executors.newScheduledThreadPool(1);
@@ -15,23 +15,23 @@ public class FutureHttpResponseHandler {
 
 	private IDelayedHttpResponseHandler delayedHttpResponseHandler;
 
-	public FutureHttpResponseHandler(IDelayedHttpResponseHandler delayedHttpResponseHandler) {
+	public ScheduledHttpResponseHandler(IDelayedHttpResponseHandler delayedHttpResponseHandler) {
 		this.delayedHttpResponseHandler = delayedHttpResponseHandler;
 	}
 
-	public final void handleFutureHttpResponse(ScheduledFuture<HttpResponse> delayedHttpResponse) {
+	public final void handleScheduledHttpResponse(ScheduledFuture<HttpResponse> scheduledHttpResponse) {
 		scheduledAttempts++;
 		if (scheduledAttempts > DELAYED_RETRIALS_MAX_ATTEMPTS) {
-			delayedHttpResponse.cancel(true);
+			scheduledHttpResponse.cancel(true);
 			return;
 		}
 		System.out.println("DEBUG: scheduled attempt " + scheduledAttempts);
 
-		final long delay = delayedHttpResponse.getDelay(TimeUnit.MILLISECONDS);
+		final long delay = scheduledHttpResponse.getDelay(TimeUnit.MILLISECONDS);
 		if (delay > 0) {
 			POOL.schedule(() -> {
 				try {
-					HttpResponse httpResponse = delayedHttpResponse.get();
+					HttpResponse httpResponse = scheduledHttpResponse.get();
 					if (!httpResponse.isScheduled()) {
 						delayedHttpResponseHandler.handleDelayedHttpResponse(httpResponse);
 					}

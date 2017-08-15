@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 
 class RetriableHttpRequestInvoker extends HttpRequestInvoker {
@@ -23,7 +23,7 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 	}
 
 	@Override
-	public HttpResponse invoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler responseHandler) {
+	public HttpResponse invoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler responseHandler) {
 		HttpResponse httpResponse = null;
 		OfInt intervals = retryPolicy.intervals().iterator();
 		Instant invocationStartInstant = Instant.now();
@@ -52,7 +52,7 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 
 	@Override
 	public Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest,
-			FutureHttpResponseHandler responseHandler) {
+			ScheduledHttpResponseHandler responseHandler) {
 		return POOL.submit(new Callable<HttpResponse>() {
 
 			@Override

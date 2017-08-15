@@ -1,4 +1,4 @@
-# open-http-client
+# open-http-client (Under Construction)
 A reference implementation for a HTTP client wrapper which allows decoupling the consumer application from the underlying native HTTP client library and uses a standard language for sending HTTP requests and receiving HTTP response
 
 ## Problem discovery
@@ -27,43 +27,42 @@ OpenHttpClient.newGetRequest(baseUri + path, httpRequestSender)
 	.send(delayedHttpResponseHandler)
 	.getBody();
 ```
-`OpenHttpClient` is a simple <i>Facade</i> which simplifies the use of this module. `OpenHttpClient.newGetRequest` creates a new `InvocationBuilder` for a GET request. Similar APIs exists for POST, PUT, DELETE requests.<br>
-`InvocationBuilder` is a <i>Builder</i> which offers several APIs which can be chained together for building a request, sending it over HTTP and handling the response.
+`OpenHttpClient` is a simple _Facade_ which simplifies the use of this module. `OpenHttpClient.newGetRequest` creates a new `InvocationBuilder` for a GET request. Similar APIs exists for POST, PUT, DELETE requests.  
+`InvocationBuilder` is a _Builder_ which offers several APIs which can be chained together for building a request, sending it over HTTP and handling the response.
 The `httpRequestSender` must be an implementation of `IHttpRequestSender`. This represents the native HTTP client.
-<ul>
-	<li>`InvocationBuilder.accept(...)` sets the accepted mime types for this request,</li>
-	<li>`InvocationBuilder.headers(...)` sets the request headers for this request,</li>
-	<li>`InvocationBuilder.secure(...)` takes an `SSLConfig` which holds all the information that would help the native HTTP client to build the SSLContext
-	<li>`InvocationBuilder.retry(...)` accepts a `IRetryPolicy` implementation and enables retrying the HTTP requests in case of failures</li>
-	<li>`InvocationBuilder.disableRetryAfter()` disables handling the Retry-After header sent back in the HTTP response from the server</li> 
-	<li>
-		`InvocationBuilder.send(...)` sends an `AbstractHttpRequest` as a <i>Command</i> to an `IHttpRequestInvoker` implementation
-		<ul>
-			<li><strong>IHttpRequestInvoker</strong> then executes the <strong>AbstractHttpRequest</strong> <i>Command</i> and,</li>
-			<li><strong>AbstractHttpRequest</strong> <i>Command</i> then invokes the <strong>IHttpRequestSender</strong></li>
-		</ul>
-		`InvocationBuilder.send()` takes an `IDelayedHttpResponseHandler` implementation, to handle any responses coming from scheduled requests. Requests are scheduled when Retry-After response header is processed. This handler is invoked with the final `HttpResponse` when all the scheduled requests are executed
-	</li>
-	<li>`HttpResponse.getBody()` extracts the response content</li>
-</ul>
+- `InvocationBuilder.accept(...)` sets the accepted mime types for this request,
+- `InvocationBuilder.headers(...)` sets the request headers for this request,
+- `InvocationBuilder.secure(...)` takes an `SSLConfig` which holds all the information that would help the native HTTP client to build the SSLContext
+- `InvocationBuilder.retry(...)` accepts a `IRetryPolicy` implementation and enables retrying the HTTP requests in case of failures
+-`InvocationBuilder.disableRetryAfter()` disables handling the Retry-After header sent back in the HTTP response from the server 
+- `InvocationBuilder.send(...)` sends an `AbstractHttpRequest` as a _Command_ to an `IHttpRequestInvoker` implementation
+    - `IHttpRequestInvoker` then executes the `AbstractHttpRequest` _Command_ and,
+    - `AbstractHttpRequest` _Command_ then invokes the `IHttpRequestSender`
+- `InvocationBuilder.send()` takes an `IDelayedHttpResponseHandler` implementation, to handle any responses coming from scheduled requests. Requests are scheduled when Retry-After response header is processed. This handler is invoked with the final `HttpResponse` when all the scheduled requests are executed.
+    - `IDelayedHttpResponseHandler` will be taken from a _Service-Provider_ in future releases.
+- `HttpResponse.getBody()` extracts the response content
+
 See the javadocs for more APIs, and Wiki for how those work. 
 
-## Class Diagram
+## Major Components
+##### AbstractHttpRequest
+- GetRequest
+- PostRequest
+- SecureRequest
+- AbstractHttpRequestBuilder
+    - GetRequest.Builder
+    - PostRequest.Builder
+    - SecureRequest.Builder
+
+##### HttpResponse
+##### IHttpRequestInvoker
+- HttpRequestInvoker
+- RetriableHttpRequestInvoker
+- IRetryPolicy
+
+##### HttpRequestScheduler
+##### ScheduledHttpResponseHandler
+##### IHttpRequestSender
+
+## Class Diagram (To be updated)
 ![Class Diagram](uml/high-level-class-diagram.png)
-
-## Design Patterns Used:
-<ul>
-	<li>Facade</li>
-	<li>Command</li>
-	<li>Decorator</li>
-	<li>Builder</li>
-	<li>Strategy</li>
-</ul>
-
-## Long story cut short
-<p>
-	Any local application service would call OpenHttpClient Facade to build and send a AbstractHttpRequest Command to the IHttpRequestInvoker Command-Invoker.
-	Building an AbstractHttpRequest Command also involves choosing a concrete IHttpRequestSender Command-Receiver (also known as Request-Sender given the context)
-	The IHttpRequestInvoker Command-Invoker invokes the AbstractHttpRequest Command with zero or more IHttpRequestInvoker Decorators
-	The AbstractHttpRequest Command when invoked, executes the IHttpRequestSender Command-Receiver methods to send HTTP requests and receive HTTP responses
-</p>

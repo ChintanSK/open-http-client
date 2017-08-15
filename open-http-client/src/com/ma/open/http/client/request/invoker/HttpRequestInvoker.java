@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.utils.HttpDateUtils;
 import com.ma.open.http.client.utils.NumberUtils;
@@ -30,13 +30,13 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 	}
 
 	@Override
-	public HttpResponse invoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler responseHandler) {
+	public HttpResponse invoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler responseHandler) {
 		return doInvoke(httpRequest, responseHandler);
 	}
 
 	@Override
 	public Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest,
-			FutureHttpResponseHandler responseHandler) {
+			ScheduledHttpResponseHandler responseHandler) {
 
 		return POOL.submit(() -> {
 			return doInvoke(httpRequest, responseHandler);
@@ -48,14 +48,14 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 		return responseHandled;
 	}
 
-	private HttpResponse doInvoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler responseHandler) {
+	private HttpResponse doInvoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler responseHandler) {
 		final HttpResponse httpResponse = httpRequest.send().withHttpRequest(httpRequest);
 		if (retryAfterEnabled && retryAfter(httpResponse)) {
 			responseHandled = true;
 			final ScheduledFuture<HttpResponse> delayedHttpResponse = scheduleHttpRequest(this, httpRequest,
 					httpResponse, responseHandler);
 			httpResponse.withScheduledHttpResponse(delayedHttpResponse);
-			responseHandler.handleFutureHttpResponse(delayedHttpResponse);
+			responseHandler.handleScheduledHttpResponse(delayedHttpResponse);
 		}
 		return httpResponse;
 	}
@@ -66,7 +66,7 @@ class HttpRequestInvoker implements IHttpRequestInvoker {
 	}
 
 	private ScheduledFuture<HttpResponse> scheduleHttpRequest(HttpRequestInvoker httpRequestInvoker,
-			AbstractHttpRequest httpRequest, HttpResponse httpResponse, FutureHttpResponseHandler responseHandler) {
+			AbstractHttpRequest httpRequest, HttpResponse httpResponse, ScheduledHttpResponseHandler responseHandler) {
 		httpRequest.addHttpResponse(httpResponse);
 		return SCHEDULER.scheduleRequestInvocation(httpRequestInvoker, httpRequest, retryAfterMillis(httpResponse),
 				responseHandler);

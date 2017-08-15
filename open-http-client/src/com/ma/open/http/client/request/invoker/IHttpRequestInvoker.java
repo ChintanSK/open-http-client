@@ -3,7 +3,7 @@ package com.ma.open.http.client.request.invoker;
 import java.util.concurrent.Future;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.response.FutureHttpResponseHandler;
+import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 
 public interface IHttpRequestInvoker {
@@ -16,9 +16,9 @@ public interface IHttpRequestInvoker {
 		return new RetriableHttpRequestInvoker(retryPolicy);
 	}
 
-	HttpResponse invoke(AbstractHttpRequest httpRequest, FutureHttpResponseHandler callback);
+	HttpResponse invoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler callback);
 
-	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest, FutureHttpResponseHandler callback);
+	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler callback);
 
 	void disableRetryAfter();
 
