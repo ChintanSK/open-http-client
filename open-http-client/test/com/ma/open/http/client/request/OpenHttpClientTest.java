@@ -2,13 +2,13 @@ package com.ma.open.http.client.request;
 
 import com.ma.open.http.client.consumer.service.ILocalInterfaceToRemoteService;
 import com.ma.open.http.client.consumer.service.RemoteServiceAdapter;
-import com.ma.open.http.client.request.sender.ApacheHttpRequestSender;
-import com.ma.open.http.client.request.sender.JerseyHttpRequestSender;
+import com.ma.open.http.client.request.sender.SuccessResponder;
+import com.ma.open.http.client.request.sender.RetryAfterRedirectionResponder;
 
 public class OpenHttpClientTest {
 	public static void main(String[] args) {
 		try {
-			ILocalInterfaceToRemoteService remoteService1 = new RemoteServiceAdapter(new JerseyHttpRequestSender());
+			ILocalInterfaceToRemoteService remoteService1 = new RemoteServiceAdapter(new RetryAfterRedirectionResponder());
 
 			Object o1 = remoteService1.get("123");
 			System.out.println("Jersey-Client GET successful: " + o1);
@@ -26,7 +26,7 @@ public class OpenHttpClientTest {
 			}
 			System.out.println();
 
-			ILocalInterfaceToRemoteService remoteService2 = new RemoteServiceAdapter(new ApacheHttpRequestSender());
+			ILocalInterfaceToRemoteService remoteService2 = new RemoteServiceAdapter(new SuccessResponder());
 
 			Object o3 = remoteService2.get("123");
 			System.out.println("Apache-Http-Client GET successful: " + o3);

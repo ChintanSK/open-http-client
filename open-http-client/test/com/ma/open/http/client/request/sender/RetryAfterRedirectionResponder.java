@@ -1,28 +1,30 @@
 package com.ma.open.http.client.request.sender;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.response.HttpResponse;
-import com.ma.open.http.client.request.sender.IHttpRequestSender;
 import com.ma.open.http.client.request.ssl.SSLConfig;
 
-public class JerseyHttpRequestSender implements IHttpRequestSender {
+public class RetryAfterRedirectionResponder implements IHttpRequestSender {
 
 	@Override
 	public void configureSsl(SSLConfig sslConfig) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public HttpResponse get(AbstractHttpRequest getRequest) {
-		// TODO Auto-generated method stub
-		return new HttpResponse(200).withBody("Hello Open Http Client. I know you are there with my client");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Retry-After", "120");
+		return new HttpResponse(301).withHeaders(headers);
 	}
 
 	@Override
 	public HttpResponse post(AbstractHttpRequest postRequest) {
-		// TODO Auto-generated method stub
-		return new HttpResponse(204);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Retry-After", "120");
+		return new HttpResponse(301).withHeaders(headers);
 	}
 
 }

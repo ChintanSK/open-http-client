@@ -69,4 +69,17 @@ public class HttpResponse {
 		return scheduledHttpResponse;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer string = new StringBuffer();
+		if (scheduled) {
+			string.append("Scheduled:");
+		}
+		string.append(status);
+		if (body != null) {
+			string.append(":" + body);
+		}
+		return string.toString();
+	}
+
 }
