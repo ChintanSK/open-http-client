@@ -3,8 +3,8 @@ package com.ma.open.http.client.request.invoker;
 import java.util.concurrent.Future;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
+import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
 
 public interface IHttpRequestInvoker {
 
@@ -16,14 +16,15 @@ public interface IHttpRequestInvoker {
 		return new RetriableHttpRequestInvoker(retryPolicy);
 	}
 
-	HttpResponse invoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler callback);
+	HttpResponse invoke(AbstractHttpRequest httpRequest);
 
-	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler callback);
+	Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest);
 
 	void disableRetryAfter();
 
-	default boolean isResponseHandled() {
-		return false;
-	}
+	IRetryAfterHandler getRetryAfterHandler();
 
+	IRedirectionHandler getRedirectionHandler();
+
+	IDelayedHttpResponseHandler getDelayedHttpResponseHandler();
 }

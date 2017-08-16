@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import com.ma.open.http.client.request.invoker.DefaultRetryAfterHandler;
+import com.ma.open.http.client.request.invoker.HttpRequestInvokerBuilder;
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
+import com.ma.open.http.client.request.invoker.IRetryAfterHandler;
 import com.ma.open.http.client.request.invoker.IRetryPolicy;
-import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
@@ -27,40 +29,52 @@ public final class OpenHttpClient {
 		private IHttpRequestInvoker invoker = IHttpRequestInvoker.newInvoker();
 		private IRetryPolicy retryPolicy;
 		private boolean retryAfterDisabled;
+		private IRetryAfterHandler retryAfterHandler;
 
 		public InvocationBuilder(AbstractHttpRequestBuilder builder) {
 			this.wrappedBuilder = builder;
 		}
 
-		public HttpResponse send(IDelayedHttpResponseHandler httpResponseHandler) {
-			preSend();
+		public HttpResponse send(IDelayedHttpResponseHandler delayedHttpResponseHandler) {
+			buildInvoker(delayedHttpResponseHandler);
 			try {
-				return invoker.invoke(wrappedBuilder.build(), new ScheduledHttpResponseHandler(httpResponseHandler));
+				return invoker.invoke(wrappedBuilder.build());
 			} finally {
 				wrappedBuilder = null;
 			}
 		}
 
-		public Future<HttpResponse> sendAsync(IDelayedHttpResponseHandler httpResponseHandler) {
-			preSend();
+		public Future<HttpResponse> sendAsync(IDelayedHttpResponseHandler delayedHttpResponseHandler) {
+			buildInvoker(delayedHttpResponseHandler);
 			try {
-				return invoker.invokeAsync(wrappedBuilder.build(), new ScheduledHttpResponseHandler(httpResponseHandler));
+				return invoker.invokeAsync(wrappedBuilder.build());
 			} finally {
 				wrappedBuilder = null;
 			}
 		}
 
-		private void preSend() {
+		private void buildInvoker(IDelayedHttpResponseHandler delayedHttpResponseHandler) {
+			HttpRequestInvokerBuilder invokerBuilder = HttpRequestInvokerBuilder.newBuilder(delayedHttpResponseHandler);
 			if (retryPolicy != null) {
-				invoker = IHttpRequestInvoker.newRetriableInvoker(retryPolicy);
+				invokerBuilder.withRetryPolicy(retryPolicy);
 			}
 			if (retryAfterDisabled) {
-				invoker.disableRetryAfter();
+				invokerBuilder.disableRetryAfter();
+			} else if (retryAfterHandler == null) {
+				invokerBuilder.withRetryAfterHandler(retryAfterHandler);
+			} else {
+				invokerBuilder.withRetryAfterHandler(new DefaultRetryAfterHandler(delayedHttpResponseHandler));
 			}
+			invoker = invokerBuilder.build();
 		}
 
 		public InvocationBuilder disableRetryAfter() {
 			retryAfterDisabled = true;
+			return this;
+		}
+
+		public InvocationBuilder retryAfterHandler(IRetryAfterHandler retryAfterHandler) {
+			this.retryAfterHandler = retryAfterHandler;
 			return this;
 		}
 

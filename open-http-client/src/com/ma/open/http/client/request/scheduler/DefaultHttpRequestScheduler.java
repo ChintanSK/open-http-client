@@ -8,22 +8,22 @@ import java.util.concurrent.TimeUnit;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
-import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 
-public enum HttpRequestScheduler {
-	SCHEDULER;
+public enum DefaultHttpRequestScheduler implements IHttpRequestScheduler {
+	DEFAULT_SCHEDULER;
 
 	// TODO: The core pool size should come from some external configuration
 	private ScheduledExecutorService POOL = Executors.newScheduledThreadPool(10);
 
+	@Override
 	public ScheduledFuture<HttpResponse> scheduleRequestInvocation(IHttpRequestInvoker invoker,
-			AbstractHttpRequest httpRequest, long delay, ScheduledHttpResponseHandler responseHandler) {
+			AbstractHttpRequest httpRequest, long delay) {
 		return POOL.schedule(new Callable<HttpResponse>() {
 
 			@Override
 			public HttpResponse call() throws Exception {
-				return invoker.invoke(httpRequest, responseHandler);
+				return invoker.invoke(httpRequest);
 			}
 		}, delay, TimeUnit.MILLISECONDS);
 	}

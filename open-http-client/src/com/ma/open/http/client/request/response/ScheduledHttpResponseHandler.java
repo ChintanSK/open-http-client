@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ScheduledHttpResponseHandler {
+public class ScheduledHttpResponseHandler implements IScheduledHttpResponseHandler {
 	private static final int DELAYED_RETRIALS_MAX_ATTEMPTS = 5;
 
 	private ScheduledExecutorService POOL = Executors.newScheduledThreadPool(1);
@@ -19,7 +19,8 @@ public class ScheduledHttpResponseHandler {
 		this.delayedHttpResponseHandler = delayedHttpResponseHandler;
 	}
 
-	public final void handleScheduledHttpResponse(ScheduledFuture<HttpResponse> scheduledHttpResponse) {
+	@Override
+	public void handleScheduledHttpResponse(ScheduledFuture<HttpResponse> scheduledHttpResponse) {
 		scheduledAttempts++;
 		if (scheduledAttempts > DELAYED_RETRIALS_MAX_ATTEMPTS) {
 			scheduledHttpResponse.cancel(true);
@@ -43,5 +44,10 @@ public class ScheduledHttpResponseHandler {
 				}
 			}, delay, TimeUnit.MILLISECONDS);
 		}
+	}
+
+	@Override
+	public IDelayedHttpResponseHandler getDelayedHttpResponseHandler() {
+		return delayedHttpResponseHandler;
 	}
 }

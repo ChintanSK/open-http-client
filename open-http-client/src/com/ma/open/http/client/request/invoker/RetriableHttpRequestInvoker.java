@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
-import com.ma.open.http.client.request.response.ScheduledHttpResponseHandler;
 import com.ma.open.http.client.request.response.HttpResponse;
 
 class RetriableHttpRequestInvoker extends HttpRequestInvoker {
@@ -23,7 +22,7 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 	}
 
 	@Override
-	public HttpResponse invoke(AbstractHttpRequest httpRequest, ScheduledHttpResponseHandler responseHandler) {
+	public HttpResponse invoke(AbstractHttpRequest httpRequest) {
 		HttpResponse httpResponse = null;
 		OfInt intervals = retryPolicy.intervals().iterator();
 		Instant invocationStartInstant = Instant.now();
@@ -36,7 +35,7 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 					System.out.println("DEBUG: " + "attempt " + attempts);
 					sleepFor(Duration.ofMillis(intervals.next()));
 				}
-				httpResponse = super.invoke(httpRequest, responseHandler);
+				httpResponse = super.invoke(httpRequest);
 				if (httpResponse.isScheduled() && super.isResponseHandled()) {
 					break;
 				}
@@ -51,13 +50,12 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 	}
 
 	@Override
-	public Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest,
-			ScheduledHttpResponseHandler responseHandler) {
+	public Future<HttpResponse> invokeAsync(AbstractHttpRequest httpRequest) {
 		return POOL.submit(new Callable<HttpResponse>() {
 
 			@Override
 			public HttpResponse call() throws Exception {
-				return invoke(httpRequest, responseHandler);
+				return invoke(httpRequest);
 			}
 
 		});
