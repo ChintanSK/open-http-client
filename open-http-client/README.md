@@ -60,6 +60,9 @@ See the javadocs for more APIs, and Wiki for how those work.
 - RetriableHttpRequestInvoker
 - IRetryPolicy
 
+##### IRetryAfterHandler
+##### IRedirectionHandler
+
 ##### HttpRequestScheduler
 ##### ScheduledHttpResponseHandler
 ##### IHttpRequestSender
