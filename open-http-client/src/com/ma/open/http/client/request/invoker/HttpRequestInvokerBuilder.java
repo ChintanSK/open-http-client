@@ -1,6 +1,7 @@
 package com.ma.open.http.client.request.invoker;
 
 import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
+import com.ma.open.http.client.request.retry.IRetryPolicy;
 
 public class HttpRequestInvokerBuilder {
 

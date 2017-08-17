@@ -8,9 +8,9 @@ import com.ma.open.http.client.request.invoker.DefaultRetryAfterHandler;
 import com.ma.open.http.client.request.invoker.HttpRequestInvokerBuilder;
 import com.ma.open.http.client.request.invoker.IHttpRequestInvoker;
 import com.ma.open.http.client.request.invoker.IRetryAfterHandler;
-import com.ma.open.http.client.request.invoker.IRetryPolicy;
 import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
+import com.ma.open.http.client.request.retry.IRetryPolicy;
 import com.ma.open.http.client.request.sender.IHttpRequestSender;
 import com.ma.open.http.client.request.ssl.SSLConfig;
 

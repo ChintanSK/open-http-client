@@ -6,18 +6,36 @@ import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public class ServerErrorResponder implements IHttpRequestSender {
 
+	private final int maxErrorCount;
+	private int getCount = 0;
+	private int postCount = 0;
+
+	public ServerErrorResponder(int maxErrorCount) {
+		this.maxErrorCount = maxErrorCount;
+	}
+
 	@Override
 	public void configureSsl(SSLConfig sslConfig) {
 	}
 
 	@Override
 	public HttpResponse get(AbstractHttpRequest getRequest) {
-		return new HttpResponse(503);
+		getCount++;
+		if (getCount <= maxErrorCount) {
+			return new HttpResponse(503);
+		} else {
+			return new HttpResponse(200).withBody("You made it here after " + maxErrorCount + " server errors");
+		}
 	}
 
 	@Override
 	public HttpResponse post(AbstractHttpRequest postRequest) {
-		return new HttpResponse(503);
+		postCount++;
+		if (postCount <= maxErrorCount) {
+			return new HttpResponse(503);
+		} else {
+			return new HttpResponse(204);
+		}
 	}
 
 }

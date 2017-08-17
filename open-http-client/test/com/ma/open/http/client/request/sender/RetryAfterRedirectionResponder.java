@@ -9,22 +9,41 @@ import com.ma.open.http.client.request.ssl.SSLConfig;
 
 public class RetryAfterRedirectionResponder implements IHttpRequestSender {
 
+	private final int maxRetryAfterResponseCount;
+	private int getCount = 0;
+	private int postCount = 0;
+
+	public RetryAfterRedirectionResponder(int maxRetryAfterResponseCount) {
+		this.maxRetryAfterResponseCount = maxRetryAfterResponseCount;
+	}
+
 	@Override
 	public void configureSsl(SSLConfig sslConfig) {
 	}
 
 	@Override
 	public HttpResponse get(AbstractHttpRequest getRequest) {
-		Map<String, String> headers = new HashMap<>();
-		headers.put("Retry-After", "120");
-		return new HttpResponse(301).withHeaders(headers);
+		getCount++;
+		if (getCount <= maxRetryAfterResponseCount) {
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Retry-After", "120");
+			return new HttpResponse(301).withHeaders(headers);
+		} else {
+			return new HttpResponse(200)
+					.withBody("You made it after " + maxRetryAfterResponseCount + " redirected GET retries");
+		}
 	}
 
 	@Override
 	public HttpResponse post(AbstractHttpRequest postRequest) {
-		Map<String, String> headers = new HashMap<>();
-		headers.put("Retry-After", "120");
-		return new HttpResponse(301).withHeaders(headers);
+		postCount++;
+		if (postCount <= maxRetryAfterResponseCount) {
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Retry-After", "120");
+			return new HttpResponse(301).withHeaders(headers);
+		} else {
+			return new HttpResponse(204);
+		}
 	}
 
 }

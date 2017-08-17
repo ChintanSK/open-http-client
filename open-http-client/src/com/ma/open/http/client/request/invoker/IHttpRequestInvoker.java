@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.response.HttpResponse;
 import com.ma.open.http.client.request.response.IDelayedHttpResponseHandler;
+import com.ma.open.http.client.request.retry.IRetryPolicy;
 
 public interface IHttpRequestInvoker {
 

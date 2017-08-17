@@ -142,7 +142,7 @@
       <operations public="true" package="false" protected="true" private="false" static="true"/>    
     </display>  
   </class>  
-  <interface id="15" language="java" name="com.ma.open.http.client.request.invoker.IRetryPolicy" 
+  <interface id="15" language="java" name="com.ma.open.http.client.request.retry.IRetryPolicy" 
     project="open-http-client" file="/open-http-client/src/com/ma/open/http/client/request/invoker/IRetryPolicy.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="435" y="664"/>    

@@ -1,4 +1,4 @@
-package com.ma.open.http.client.request.invoker;
+package com.ma.open.http.client.request.retry;
 
 import java.time.Duration;
 import java.util.function.Predicate;
@@ -17,9 +17,5 @@ public interface IRetryPolicy {
 	boolean failOnException(Exception e);
 
 	Predicate<HttpResponse> shouldContinueRetrying();
-
-	default boolean retryAfterEnabled() {
-		return false;
-	}
 
 }

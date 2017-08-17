@@ -1,6 +1,5 @@
 package com.ma.open.http.client.request.invoker;
 
-import static com.ma.open.http.client.request.invoker.AbstractRetryPolicy.MAX_ATTEMPTS;
 import static java.lang.Thread.sleep;
 
 import java.time.Duration;
@@ -12,8 +11,12 @@ import java.util.concurrent.TimeoutException;
 
 import com.ma.open.http.client.request.AbstractHttpRequest;
 import com.ma.open.http.client.request.response.HttpResponse;
+import com.ma.open.http.client.request.retry.IRetryPolicy;
 
 class RetriableHttpRequestInvoker extends HttpRequestInvoker {
+
+	// TODO: this should come from a property file
+	private static final int MAX_ALLOWED_ATTEMPTS = 10;
 
 	private final IRetryPolicy retryPolicy;
 
@@ -68,7 +71,7 @@ class RetriableHttpRequestInvoker extends HttpRequestInvoker {
 	}
 
 	private void checkAttempts(int attempts) throws TimeoutException {
-		if (attempts >= retryPolicy.maxAttempts() || attempts >= MAX_ATTEMPTS) {
+		if (attempts >= retryPolicy.maxAttempts() || attempts >= MAX_ALLOWED_ATTEMPTS) {
 			throw new TimeoutException("Maximum retrial attempts exceeded");
 		}
 	}
